@@ -67,3 +67,11 @@ exports.signout = (req, res) => {
     message: "User signout successfully",
   });
 };
+
+//Protected routes
+exports.isSignedIn = expressJwt({
+  secret: process.env.SECRET,
+  userProperty: "auth",
+});
+
+//Custom Middleware
