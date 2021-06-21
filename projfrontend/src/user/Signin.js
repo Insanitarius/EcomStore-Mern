@@ -14,7 +14,7 @@ const Signin = () => {
   });
 
   const { email, password, error, loading, didRedirect } = values;
-  const user = isAuthenticated();
+  const { user } = isAuthenticated();
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
@@ -42,9 +42,9 @@ const Signin = () => {
   const performRedirect = () => {
     if (didRedirect) {
       if (user && user.role === 1) {
-        return <p>Redirect to Admin</p>;
+        return <Redirect to="/admin/dashboard" />;
       } else {
-        return <p>Redirect to User Dashboard</p>;
+        return <Redirect to="/user/dashboard" />;
       }
     }
     if (isAuthenticated()) {
@@ -77,7 +77,7 @@ const Signin = () => {
     );
   };
 
-  const signIpForm = () => {
+  const signInForm = () => {
     return (
       <div className="row">
         <div className="col-md-6 offset-sm-3 text-left">
@@ -113,7 +113,7 @@ const Signin = () => {
     <Base title="Sign in Page" description="A page for user to sign in!">
       {loadingMessage()}
       {errorMessage()}
-      {signIpForm()}
+      {signInForm()}
       {performRedirect()}
     </Base>
   );
