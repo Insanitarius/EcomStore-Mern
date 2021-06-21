@@ -3,7 +3,7 @@ import { API } from "../../backend";
 export const signup = (user) => {
   return fetch(`${API}/signup`, {
     method: "POST",
-    header: {
+    headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
@@ -18,7 +18,7 @@ export const signup = (user) => {
 export const signin = (user) => {
   return fetch(`${API}/signin`, {
     method: "POST",
-    header: {
+    headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
@@ -50,7 +50,7 @@ export const signout = (next) => {
   }
 };
 
-export const authenticated = () => {
+export const isAuthenticated = () => {
   if (typeof window !== "undefined") {
     return false;
   }
