@@ -18,7 +18,7 @@ router.param("categoryId", getCategoryById);
 
 //actual routes goes here
 router.post(
-  "/category/create/:userId",
+  "/create/category/:userId",
   isSignedIn,
   isAuthenticated,
   isAdmin,
