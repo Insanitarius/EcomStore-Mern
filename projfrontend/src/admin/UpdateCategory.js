@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "../auth/helper";
 import Base from "../core/Base";
-import { createCategory } from "./helper/adminapicall";
+import { updateCategory , getCategory} from "./helper/adminapicall";
 
-const AddCategory = () => {
+const UpdateCategory = ({match}) => {
   const [name, setName] = useState("");
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const { user, token } = isAuthenticated();
+
 
   const goBack = () => (
     <div className="mt-5">
@@ -18,6 +19,24 @@ const AddCategory = () => {
       </Link>
     </div>
   );
+
+
+  const preload = (categoryId) => {
+    getCategory(categoryId).then((data) => {
+        if (data.error) {
+            setName({...name, error: data.error });
+        } else {
+            setName(data.name);
+        }
+    });
+  };
+
+
+  useEffect(() => {
+    preload(match.params.categoryId);
+  }, []);
+
+
 
   const handleChange = (event) => {
     setError("");
@@ -29,8 +48,8 @@ const AddCategory = () => {
     setError("");
     setSuccess(false);
 
-    //Backend request fired
-    createCategory(user._id, token, { name })
+    //Backend request
+    updateCategory(match.params.categoryId,user._id, token, {name})
       .then((data) => {
         if (data.error) {
           setError(true);
@@ -45,17 +64,23 @@ const AddCategory = () => {
       });
   };
 
-  const successMessage = () => {
-    if (success) {
-      return <h4 className="text-success">Category created successfully!</h4>;
-    }
-  };
+  const successMessage = () => (
+    <div
+    className="alert alert-success mt-3"
+    style={{ display: success? "" : "none" }}
+  >
+    <h4>Category updated successfully!</h4>
+  </div>
+  );
 
-  const warningMessage = () => {
-    if (error) {
-      return <h4 className="text-success">Failed to create category!</h4>;
-    }
-  };
+  const warningMessage = () => (
+    <div
+    className="alert alert-danger mt-3"
+    style={{ display: error? "" : "none" }}
+  >
+    <h4>Failed to update category!</h4>
+  </div>
+  );
 
   const myCategoryForm = () => (
     <form>
@@ -67,11 +92,9 @@ const AddCategory = () => {
           onChange={handleChange}
           value={name}
           autoFocus
-          required
-          placeholder="For Eg. Summer"
         />
         <button onClick={onSubmit} className="btn btn-outline-info mt-2">
-          Create Category
+          Update Category
         </button>
       </div>
     </form>
@@ -79,8 +102,8 @@ const AddCategory = () => {
 
   return (
     <Base
-      title="Create a category here!"
-      description="Add a new category for new Tshirts"
+      title="Update a category here!"
+      description=""
       className="container bg-info p-4"
     >
       <div className="row bg-white rounded">
@@ -95,4 +118,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default UpdateCategory;

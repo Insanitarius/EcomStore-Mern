@@ -53,9 +53,8 @@ const AddProduct = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, error: "", loading: true });
-    console.log(values);
+
     createProduct(user._id, token, formData).then((data) => {
-      console.log(data);
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
@@ -66,6 +65,8 @@ const AddProduct = () => {
           price: "",
           photo: "",
           stock: "",
+          error: "",
+          category: "",
           loading: false,
           createdProduct: data.name,
         });
@@ -88,15 +89,18 @@ const AddProduct = () => {
     </div>
   );
 
-  // const warningMessage = () => {
-  //   if (error) {
-  //     return (
-  //       <div className="alert alert-danger mt-3">
-  //         <h4 className="text-danger">Failed to create the product! {error}</h4>
-  //       </div>
-  //     );
-  //   }
-  // };
+  const warningMessage = () => {
+    if (error) {
+      return (
+        <div
+          className="alert alert-danger mt-3"
+          style={{ display: error ? "" : "none" }}
+        >
+          <h4 className="text-danger">{error}!</h4>
+        </div>
+      );
+    }
+  };
 
   const createProductForm = () => (
     <form>
@@ -148,7 +152,7 @@ const AddProduct = () => {
           <option>Select</option>
           {categories &&
             categories.map((cate, index) => (
-              <option key={index} value={cate.id}>
+              <option key={index} value={cate._id}>
                 {cate.name}
               </option>
             ))}
@@ -185,8 +189,8 @@ const AddProduct = () => {
       </Link>
       <div className="row bg-dark text-white rounded">
         <div className="col-md-8 offset-md-2">
-          {/* {warningMessage()} */}
           {successMessage()}
+          {warningMessage()}
           {createProductForm()}
         </div>
       </div>
